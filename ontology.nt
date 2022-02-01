@@ -1,4 +1,8 @@
+
 # baseURI: https://example.com/ontology/
 <https://example.com/ontology/Class_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
-<https://example.com/ontology/Class_1> <http://www.w3.org/2000/01/rdf-schema#label> "Class 1" .
+<https://example.com/ontology/Class_1> <http://www.w3.org/2000/01/rdf-schema#label> "Class 1 name change" .
 <https://example.com/ontology/Class_1> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.com/ontology/Class_2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<https://example.com/ontology/Class_2> <http://www.w3.org/2000/01/rdf-schema#label> "Class 2" .
+<https://example.com/ontology/Class_2> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2002/07/owl#Class> .
