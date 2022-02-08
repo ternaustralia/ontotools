@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ontotools",
-    version="0.2.2",
+    version="0.2.3",
     author="Edmond Chuc",
     author_email="e.chuc@uq.edu.au",
     description="Ontology Python tools.",
