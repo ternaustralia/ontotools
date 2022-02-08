@@ -38,8 +38,9 @@ def normalize(
                 logger.info("Exiting with status code 1 due to changed.")
                 exit(1)
 
-    with open(filename, "w") as fwrite:
-        fwrite.write(content)
+            # Didn't fail and file has changed, so write to file.
+            with open(filename, "w") as fwrite:
+                fwrite.write(content)
 
     if generate_formats:
         logger.info("Writing N-Triples file to Turtle, N3, RDF/XML and JSON-LD.")
