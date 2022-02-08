@@ -1,9 +1,9 @@
-import logging
 import pathlib
 
 import typer
 from rdflib import Graph
 
+from ontotools.logging import logger
 from ontotools.normalize import normalize as normalize_func
 from ontotools.utils import get_filename_without_extension
 
@@ -18,9 +18,6 @@ def normalize(
         False, help="Generate other RDF formats (ttl, n3, xml, jsonld)"
     ),
 ):
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)
-
     # Ensure the file exists.
     path = pathlib.Path(filename).resolve()
     if not path.exists():
