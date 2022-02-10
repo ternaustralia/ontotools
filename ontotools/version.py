@@ -8,7 +8,7 @@ def get_version_info(g: Graph):
         return version_info
 
 
-def compare(version: str, content: str, content_type: str = "nt") -> Optional[bool]:
+def compare(version: str, content: str, content_type: str = "turtle") -> Optional[bool]:
     """Compare the version of the ontology and the content.
 
     Assumes only one owl:versionInfo in the content.
