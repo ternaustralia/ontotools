@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ontotools",
-    version="0.2.3",
+    version="0.3.0",
     author="Edmond Chuc",
     author_email="e.chuc@uq.edu.au",
-    description="Ontology Python tools.",
+    description="Python ontology tools.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),

@@ -10,7 +10,7 @@ app = typer.Typer()
 def compare(
     version: str = typer.Argument(..., help="The version to compare"),
     filename: str = typer.Argument(
-        ..., help="The N-Triples file with the version info"
+        ..., help="The Turtle file with the version info"
     ),
 ):
     """Exits with status code 1 if the version is not the same or version info is not found."""

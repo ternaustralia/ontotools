@@ -12,10 +12,10 @@ app = typer.Typer()
 
 @app.command()
 def normalize(
-    filename: str = typer.Argument(..., help="The N-Triples file to be normalized"),
+    filename: str = typer.Argument(..., help="The Turtle file to be normalized"),
     fail_if_changed: bool = typer.Option(False, help="Fail if the file was changed"),
     generate_formats: bool = typer.Option(
-        False, help="Generate other RDF formats (ttl, n3, xml, jsonld)"
+        False, help="Generate other RDF formats (nt, n3, xml, jsonld)"
     ),
 ):
     # Ensure the file exists.
@@ -29,7 +29,7 @@ def normalize(
 
         content, changed = normalize_func(content)
         if changed:
-            logger.info("The ontology has been normalized.")
+            logger.info("The file has been normalized.")
 
             if fail_if_changed:
                 logger.info("Exiting with status code 1 due to changed.")
@@ -40,12 +40,12 @@ def normalize(
                 fwrite.write(content)
 
     if generate_formats:
-        logger.info("Writing N-Triples file to Turtle, N3, RDF/XML and JSON-LD.")
+        logger.info("Writing Turtle file to N-Triples, N3, RDF/XML and JSON-LD.")
         g = Graph()
-        g.parse(data=content, format="nt")
+        g.parse(data=content, format="turtle")
 
         formats = (
-            ("turtle", "ttl"),
+            ("nt", "nt"),
             ("n3", "n3"),
             ("xml", "xml"),
             ("json-ld", "jsonld"),
