@@ -1,7 +1,11 @@
 import pathlib
+from json.decoder import JSONDecodeError
 
 import typer
 from rdflib import Graph
+from rdflib.plugins.parsers import notation3
+from rdflib.exceptions import ParserError
+from xml.sax._exceptions import SAXParseException
 
 from ontotools.logging import logger
 from ontotools.normalize import normalize as normalize_func
@@ -56,3 +60,41 @@ def normalize(
             g.serialize(
                 f"{filename_without_file_extension}.{format[1]}", format=format[0]
             )
+
+
+@app.command()
+def validate(
+    filename: str = typer.Argument(
+        ..., help="The file to be validated for syntax errors"
+    ),
+    format: str = typer.Option("turtle", help="The format of the file to be validated"),
+):
+    # Ensure the file exists.
+    path = pathlib.Path(filename).resolve()
+    if not path.exists():
+        logger.error(f"File '{filename}' does not exist.")
+        exit(1)
+
+    g = Graph()
+
+    try:
+        g.parse(filename, format=format)
+        logger.info(
+            f"File '{filename}' with format '{format}' parsed successfully with RDFLib."
+        )
+    except notation3.BadSyntax:
+        logger.error(f"File '{filename}' with format '{format}' has syntax errors.")
+        exit(1)
+    except SAXParseException:
+        logger.error(f"File '{filename}' with format '{format}' has syntax errors.")
+        exit(1)
+    except JSONDecodeError:
+        logger.error(f"File '{filename}' with format '{format}' has syntax errors.")
+        exit(1)
+    except ParserError:
+        logger.error(f"File '{filename}' with format '{format}' has syntax errors.")
+        exit(1)
+    except Exception as e:
+        logger.error(f"Unknown error has occurred.")
+        logger.error({e})
+        exit(1)
