@@ -1,7 +1,7 @@
 import typer
 
 from ontotools.logging import logger
-from ontotools.version import compare as compare_func
+from ontotools.functions.version import compare as compare_func
 
 app = typer.Typer()
 

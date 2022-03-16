@@ -1,4 +1,4 @@
-from ontotools.version import compare
+from ontotools.functions.version import compare
 
 
 def test_compare_true():
