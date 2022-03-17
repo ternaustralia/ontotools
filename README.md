@@ -21,6 +21,20 @@ Options:
   --help                          Show this message and exit.
 ```
 
+## Development
+
+Install the project in editable mode.
+
+```
+pip install -e .
+```
+
+### Run tests
+
+```
+pytest
+```
+
 ## Contact
 
 Edmond Chuc  
