@@ -1,15 +1,12 @@
 import pathlib
-from json.decoder import JSONDecodeError
 
 import typer
 from rdflib import Graph
-from rdflib.plugins.parsers import notation3
-from rdflib.exceptions import ParserError
-from xml.sax._exceptions import SAXParseException
 
 from ontotools.logging import logger
-from ontotools.normalize import normalize as normalize_func
+from ontotools.functions.normalize import normalize as normalize_func
 from ontotools.utils import get_filename_without_extension
+from ontotools.functions.validate import validate_syntax, SyntaxError
 
 app = typer.Typer()
 
@@ -75,26 +72,17 @@ def validate(
         logger.error(f"File '{filename}' does not exist.")
         exit(1)
 
-    g = Graph()
+    with open(filename, "r") as f:
+        data = f.read()
 
-    try:
-        g.parse(filename, format=format)
-        logger.info(
-            f"File '{filename}' with format '{format}' parsed successfully with RDFLib."
-        )
-    except notation3.BadSyntax:
-        logger.error(f"File '{filename}' with format '{format}' has syntax errors.")
-        exit(1)
-    except SAXParseException:
-        logger.error(f"File '{filename}' with format '{format}' has syntax errors.")
-        exit(1)
-    except JSONDecodeError:
-        logger.error(f"File '{filename}' with format '{format}' has syntax errors.")
-        exit(1)
-    except ParserError:
-        logger.error(f"File '{filename}' with format '{format}' has syntax errors.")
-        exit(1)
-    except Exception as e:
-        logger.error(f"Unknown error has occurred.")
-        logger.error({e})
-        exit(1)
+        try:
+            validate_syntax(data, format)
+            logger.info(
+                f"File '{filename}' with format '{format}' parsed successfully with RDFLib."
+            )
+        except SyntaxError:
+            logger.error(f"File '{filename}' with format '{format}' has syntax errors.")
+        except Exception as e:
+            logger.error(f"Unknown error has occurred.")
+            logger.error({e})
+            exit(1)

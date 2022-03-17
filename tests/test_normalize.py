@@ -1,4 +1,4 @@
-from ontotools.normalize import normalize, get_topbraid_metadata
+from ontotools.functions.normalize import normalize, get_topbraid_metadata
 
 
 content = """# baseURI: https://w3id.org/tern/ontologies/tern/
