@@ -1,6 +1,6 @@
 import pytest
 
-from ontotools.functions.validate import validate_syntax, SyntaxError
+from ontotools.functions.validate import validate_syntax, RDFSyntaxError
 
 
 def test_validate_syntax_pass():
@@ -12,5 +12,5 @@ def test_validate_syntax_pass():
 def test_validate_syntax_fail():
     data = "<a> <b> <c>"
 
-    with pytest.raises(SyntaxError):
+    with pytest.raises(RDFSyntaxError):
         assert validate_syntax(data, "turtle")

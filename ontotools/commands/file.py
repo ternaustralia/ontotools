@@ -1,4 +1,5 @@
 import pathlib
+import sys
 
 import typer
 from rdflib import Graph
@@ -6,7 +7,7 @@ from rdflib import Graph
 from ontotools.logging import logger
 from ontotools.functions.normalize import normalize as normalize_func
 from ontotools.utils import get_filename_without_extension
-from ontotools.functions.validate import validate_syntax, SyntaxError
+from ontotools.functions.validate import validate_syntax, RDFSyntaxError
 
 app = typer.Typer()
 
@@ -22,10 +23,10 @@ def normalize(
     # Ensure the file exists.
     path = pathlib.Path(filename).resolve()
     if not path.exists():
-        logger.error(f"File '{filename}' does not exist.")
-        exit(1)
+        logger.error("File '%s' does not exist.", filename)
+        sys.exit(1)
 
-    with open(filename, "r") as fread:
+    with open(filename, "r", encoding="utf-8") as fread:
         content = fread.read()
 
         content, changed = normalize_func(content)
@@ -37,7 +38,7 @@ def normalize(
                 exit(1)
 
             # Didn't fail and file has changed, so write to file.
-            with open(filename, "w") as fwrite:
+            with open(filename, "w", encoding="utf-8") as fwrite:
                 fwrite.write(content)
 
     if generate_formats:
@@ -51,11 +52,11 @@ def normalize(
             ("xml", "xml"),
             ("json-ld", "jsonld"),
         )
-        for format in formats:
+        for format_ in formats:
             filename_without_file_extension = get_filename_without_extension(filename)
-            logger.info(f"Writing {filename_without_file_extension}.{format[1]}")
+            logger.info("Writing %s.%s", filename_without_file_extension, format_[1])
             g.serialize(
-                f"{filename_without_file_extension}.{format[1]}", format=format[0]
+                f"{filename_without_file_extension}.{format_[1]}", format=format_[0]
             )
 
 
@@ -64,25 +65,30 @@ def validate(
     filename: str = typer.Argument(
         ..., help="The file to be validated for syntax errors"
     ),
-    format: str = typer.Option("turtle", help="The format of the file to be validated"),
+    fileformat: str = typer.Option(
+        "turtle", help="The format of the file to be validated"
+    ),
 ):
     # Ensure the file exists.
     path = pathlib.Path(filename).resolve()
     if not path.exists():
-        logger.error(f"File '{filename}' does not exist.")
+        logger.error("File '%s' does not exist.", filename)
         exit(1)
 
-    with open(filename, "r") as f:
+    with open(filename, "r", encoding="utf-8") as f:
         data = f.read()
 
         try:
-            validate_syntax(data, format)
+            validate_syntax(data, fileformat)
             logger.info(
-                f"File '{filename}' with format '{format}' parsed successfully with RDFLib."
+                "File '%s' with format '%s' parsed successfully with RDFLib.",
+                filename,
+                fileformat,
             )
-        except SyntaxError:
-            logger.error(f"File '{filename}' with format '{format}' has syntax errors.")
-        except Exception as e:
-            logger.error(f"Unknown error has occurred.")
-            logger.error({e})
-            exit(1)
+        except RDFSyntaxError:
+            logger.error("File '%s' with format '%s' has syntax errors.", filename, fileformat)
+            sys.exit(1)
+        except Exception as err:
+            logger.error("Unknown error has occurred.")
+            logger.error(str(err))
+            sys.exit(2)
