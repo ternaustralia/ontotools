@@ -6,7 +6,7 @@ from ontotools.graph import serialize
 def test_graph_has_prefix_bindings():
     graph = Graph()
 
-    content = """    
+    content = """
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX ns1: <https://w3id.org/tern/ontologies/tern/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
