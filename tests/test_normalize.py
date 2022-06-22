@@ -1,3 +1,5 @@
+from rdflib import Graph
+
 from ontotools.functions.normalize import normalize, get_topbraid_metadata
 
 
@@ -47,7 +49,6 @@ sosa:isSampleOf
 
 def test_normalize_changed_true():
     _, changed = normalize(content)
-    print(_)
     assert changed
 
 
@@ -90,7 +91,9 @@ sosa:isSampleOf
 
 def test_topbraid_metadata():
     metadata = get_topbraid_metadata(content)
-    assert metadata == """# baseURI: https://w3id.org/tern/ontologies/tern/
+    assert (
+        metadata
+        == """# baseURI: https://w3id.org/tern/ontologies/tern/
 # imports: http://datashapes.org/dash
 # imports: http://qudt.org/schema/qudt/
 # imports: http://rdfs.org/ns/void
@@ -105,4 +108,33 @@ def test_topbraid_metadata():
 # imports: https://w3id.org/tern/ontologies/loc/
 # imports: https://w3id.org/tern/ontologies/org/
 # imports: https://w3id.org/tern/ontologies/sd/
-# prefix: tern"""
+# prefix: tern
+"""
+    )
+
+
+def test_no_topbraid_metadata():
+    content = """PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+
+<http://rs.tdwg.org/dwc/terms/materialSampleID>
+    a rdf:Property ;
+    rdfs:label "material sample ID" ;
+    rdfs:comment "An identifier for the MaterialSample (as opposed to a particular digital record of the material sample). In the absence of a persistent global unique identifier, construct one from a combination of identifiers in the record that will most closely make the materialSampleID globally unique." ;
+    rdfs:isDefinedBy <http://rs.tdwg.org/dwc/terms/> ;
+.
+
+sosa:isSampleOf
+    a owl:TransitiveProperty ;
+.
+
+"""
+    normalized_content, changed = normalize(content)
+    assert not changed
+
+    graph = Graph()
+    graph.parse(data=content, format="turtle")
+    rdflib_content = graph.serialize(format="longturtle")
+    assert normalized_content == rdflib_content
