@@ -2,10 +2,12 @@ from typing import Tuple
 
 from rdflib import Graph
 
+from ontotools.graph import serialize
+
 
 def normalize_old(content: str) -> Tuple[str, bool]:
     """This is no longer used. Only suitable for N-Triples content
-    
+
     Issue is blank node IDs are not preserved when using applications
     such as TopBraid Composer.
     """
@@ -20,14 +22,17 @@ def normalize_old(content: str) -> Tuple[str, bool]:
 def get_topbraid_metadata(content: str) -> str:
     """Get the TopBraid Composer metadata at the top of an ontology file."""
     lines = content.split("\n")
-    comments = list()
+    comments = []
     for line in lines:
         if line.startswith("#"):
             comments.append(line)
         else:
             break
 
-    return "\n".join(comments)
+    if comments:
+        return "\n".join(comments) + "\n"
+    else:
+        return ""
 
 
 def normalize(content: str) -> Tuple[str, bool]:
@@ -35,7 +40,7 @@ def normalize(content: str) -> Tuple[str, bool]:
 
     g = Graph()
     g.parse(data=content, format="turtle")
-    new_content = g.serialize(format="longturtle")
-    new_content = metadata + "\n" + new_content
+    new_content = serialize(g)
+    new_content = metadata + new_content
     changed = content != new_content
     return new_content, changed
