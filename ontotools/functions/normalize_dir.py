@@ -21,9 +21,14 @@ def normalize_dir(path: Path, check: bool):
             logger.info(err)
             changed_files.append(file)
 
-    if check:
-        raise FailOnChangeError(
-            f"{len(changed_files)} out of {len(files)} files will change."
-        )
+    if check and changed_files:
+        if changed_files:
+            raise FailOnChangeError(
+                f"{len(changed_files)} out of {len(files)} files will change."
+            )
+        else:
+            logger.info(
+                "%s out of %s files will change.", len(changed_files), len(files)
+            )
     else:
         logger.info("%s out of %s files changed.", len(changed_files), len(files))
