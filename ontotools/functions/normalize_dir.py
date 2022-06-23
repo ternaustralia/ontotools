@@ -17,7 +17,8 @@ def normalize_dir(path: Path, fail_if_changed: bool):
 
             if changed:
                 changed_files.append(file)
-        except FailOnChangeError:
+        except FailOnChangeError as err:
+            logger.info(err)
             changed_files.append(file)
 
     if fail_if_changed:
