@@ -13,11 +13,13 @@ def normalize(
     directory: str = typer.Argument(
         ..., help="The directory of Turtle files to be normalized"
     ),
-    fail_if_changed: bool = typer.Option(False, help="Fail if files would changed"),
+    check: bool = typer.Option(
+        False, help="Check what files will be normalized without applying the effect."
+    ),
 ):
     """Normalizes the format of Turtle files in a given directory."""
     try:
-        normalize_dir(directory, fail_if_changed)
+        normalize_dir(directory, check)
     except FailOnChangeError as err:
         logger.error(err)
         sys.exit(1)

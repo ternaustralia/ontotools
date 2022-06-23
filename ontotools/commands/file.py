@@ -15,14 +15,16 @@ app = typer.Typer()
 def normalize(
     filename: str = typer.Argument(..., help="The Turtle file to be normalized"),
     output_filename: Optional[str] = typer.Argument(None, help="Output filename"),
-    fail_if_changed: bool = typer.Option(False, help="Fail if the file was changed"),
+    check: bool = typer.Option(
+        False, help="Check if the file will change without applying the effect"
+    ),
     generate_formats: bool = typer.Option(
         False, help="Generate other RDF formats (nt, n3, xml, jsonld)"
     ),
 ):
     try:
         normalize_file(
-            filename, fail_if_changed, generate_formats, output_filename=output_filename
+            filename, check, generate_formats, output_filename=output_filename
         )
     except (FileNotFoundError, FailOnChangeError) as err:
         logger.error(err)

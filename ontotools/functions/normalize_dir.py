@@ -4,7 +4,7 @@ from ontotools.functions.normalize_file import normalize_file, FailOnChangeError
 from ontotools.logging import logger
 
 
-def normalize_dir(path: Path, fail_if_changed: bool):
+def normalize_dir(path: Path, check: bool):
     path = Path(path).resolve()
 
     files = list(path.glob("**/*.ttl"))
@@ -13,7 +13,7 @@ def normalize_dir(path: Path, fail_if_changed: bool):
 
     for file in files:
         try:
-            changed = normalize_file(file, fail_if_changed, False)
+            changed = normalize_file(file, check, False)
 
             if changed:
                 changed_files.append(file)
@@ -21,7 +21,7 @@ def normalize_dir(path: Path, fail_if_changed: bool):
             logger.info(err)
             changed_files.append(file)
 
-    if fail_if_changed:
+    if check:
         raise FailOnChangeError(
             f"{len(changed_files)} out of {len(files)} files will change."
         )
