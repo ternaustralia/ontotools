@@ -32,8 +32,5 @@ jobs:
       - name: Install ontotools
         run: pip install .
 
-      - name: Install pytet
-        run: pip install pytest
-
       - name: Run tests
-        run: pytest --cov=src tests/
+        run: pytest --cov=ontotools tests/
