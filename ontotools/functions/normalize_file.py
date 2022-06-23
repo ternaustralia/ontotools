@@ -15,7 +15,7 @@ class FailOnChangeError(Exception):
 
 def normalize_file(
     filename: pathlib.Path,
-    fail_if_changed: bool,
+    check: bool,
     generate_formats: bool,
     output_filename: pathlib.Path = None,
 ) -> bool:
@@ -29,10 +29,10 @@ def normalize_file(
 
         content, changed = normalize(content)
         if changed:
-            logger.info("The file %s has/will be normalized.", path)
-
-            if fail_if_changed:
-                raise FailOnChangeError("The file was changed.")
+            if check:
+                raise FailOnChangeError(f"The file {path} contains changes that can be normalized.")
+            else:
+                logger.info("The file %s has been normalized.", path)
 
             # Didn't fail and file has changed, so write to file.
             with open(

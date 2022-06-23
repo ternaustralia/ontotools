@@ -6,15 +6,15 @@ The tool currently normalises ontologies in the Turtle format for version contro
 
 ```bash
 $ ontotools file normalize --help
-Usage: ontotools file normalize [OPTIONS] FILENAME
+Usage: ontotools file normalize [OPTIONS] FILENAME [OUTPUT_FILENAME]
 
 Arguments:
-  FILENAME  The Turtle file to be normalized  [required]
+  FILENAME           The Turtle file to be normalized  [required]
+  [OUTPUT_FILENAME]  Output filename
 
 Options:
-  --fail-if-changed / --no-fail-if-changed
-                                  Fail if the file was changed  [default: no-
-                                  fail-if-changed]
+  --check / --no-check            Check if the file will change without
+                                  applying the effect  [default: no-check]
   --generate-formats / --no-generate-formats
                                   Generate other RDF formats (nt, n3, xml,
                                   jsonld)  [default: no-generate-formats]
