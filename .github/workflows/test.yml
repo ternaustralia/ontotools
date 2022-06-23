@@ -33,4 +33,4 @@ jobs:
         run: pip install .
 
       - name: Run tests
-        run: pytest --cov=ontotools tests/
+        run: python -m pytest --cov=ontotools tests/
